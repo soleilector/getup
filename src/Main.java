@@ -67,13 +67,13 @@ public class Main {
 	private static Color mainColor = new Color(0xfff4ab);
 	private static Color mainFontColor = Color.black;
 	
-	private static JLabel headerLabel = new JLabel("Get Up!",
+	private static JLabel headerLabel = new JLabel("Get Up",
 			JLabel.CENTER) {
 		{
 			setBackground(mainColor);
 			setForeground(mainFontColor);
 			setPreferredSize(new Dimension(computerSize.width, 68));
-			setFont(new Font("Ink Free",Font.BOLD,36));
+			setFont(new Font("Verdana",Font.BOLD,36));
 			setLayout(centerLayout);
 		}
 	};
@@ -366,27 +366,16 @@ public class Main {
 					boolean userHasEnoughTurns = (thisUser.getTurns()>0);
 					int tileMoveCost = thisUser.getMoveCost(thisUser.getMoveType(mapTileId, thisMap));
 					//String thisTileToken = thisMap.getTileToken(mapTileId);
+					if (!userHasEnoughTurns) { messageLabel.setText("You have no more turns! Complete some quests for more turns!"); }
+					if (thisUser.getTurns() < tileMoveCost) { messageLabel.setText("You don't have enough turns. Complete some quests for more turns!"); }
 					if (userHasEnoughTurns && tileMoveCost > -1) {
 						//thisUser.getMoveType(mapTileId,thisMap);
 						if (thisUser.getPosition() != mapTileId ) { // if 
 							if (thisMap.isTileFree(mapTileId)) { // if user is not on this tile and it is free
+								messageLabel.setText("Play!");
 								thisUser.setPosition(mapTileId,thisMap); // set the position of user to the map tile
 								thisUser.giveTurn(-tileMoveCost); // remove a turn from the user
 								
-								// only generate if player moves
-								/*
-								thisMap.generateMapToken(thisUser.getMapName());
-								if (tokenGens <= Map.CHANCE_TO_GEN) {
-									int shouldGen = GenFunx.randomInRange_Random(0, 100);
-									System.out.println("Should gen: "+shouldGen);
-									if (shouldGen <= Map.CHANCE_TO_GEN) {
-										System.out.println("Gonna generate a token...");
-										//thisMap.fillFreeTiles();
-										thisMap.fillOneFreeTile();
-									}
-								}
-								tokenGens++;
-								*/
 								tokenGens = thisMap.fillMap(tokenGens);
 							} else { // user is not on this tile and it is not free...
 								//HashMap<String,String> thisTokenInfo = MapTokens.getTokenInfo(thisTileToken);
@@ -395,6 +384,7 @@ public class Main {
 								if (successfulInteraction == User.interactStates.SUCCESS) {
 									refreshHealthBar();
 									refreshEXPBar();
+									messageLabel.setText("Play!");
 								} else {
 									switch (successfulInteraction) {
 										case HEALTH:
@@ -489,6 +479,7 @@ public class Main {
 		
 
 		initializeQuests();
+		refreshQuests();
 		refreshHealthBar();
 		refreshEXPBar();
 		while (true) {
@@ -506,13 +497,7 @@ public class Main {
 				startTick = currentTick;
 				endTick = currentTick + timeToElapse;
 				
-				//System.out.println("Generating new quests...");
-				ArrayList<Integer> newQuestIds = thisUser.generateQuests(); // generate new QuestIds
-				//System.out.println("Setting new quests...");
-				
-				thisUser.setQuests(newQuestIds);
-				
-				//System.out.println("Updating new quests...");
+				refreshQuests();
 				updateQuests();
 				//System.out.println("Finished generated new quests.");
 			}
@@ -623,6 +608,11 @@ public class Main {
 			}
 		}
 	};
+	
+	private static void refreshQuests() {
+		ArrayList<Integer> newQuestIds = thisUser.generateQuests(); // generate new QuestIds
+		thisUser.setQuests(newQuestIds);
+	}
 	
 	private static void refreshHealthBar() {
 		float healthRatio = (float) thisUser.getHealth()/ (float) thisUser.getMaxHealth();

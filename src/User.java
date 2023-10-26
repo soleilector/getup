@@ -250,11 +250,11 @@ public class User {
 					
 					System.out.println("Omigawhd");
 				} else if (userQuestData.equals("0")) {
-					System.out.println("QuestID: "+questId);
-					System.out.println("\t"+(!userQuestData.equals("claimable")));
-					System.out.println("\t"+userQuestData.equals("1"));
-					System.out.println((!userQuestData.equals("claimable") && userQuestData.equals("1")));
-					System.out.println("\t"+userQuestData+"\n");
+					//System.out.println("QuestID: "+questId);
+					//System.out.println("\t"+(!userQuestData.equals("claimable")));
+					//System.out.println("\t"+userQuestData.equals("1"));
+					//System.out.println((!userQuestData.equals("claimable") && userQuestData.equals("1")));
+					//System.out.println("\t"+userQuestData+"\n");
 				}
 				
 			} else { // quest doesn't exist, so remove broken data from user...

@@ -70,6 +70,104 @@ public class Quests {
 			put("Turns","1");
 		}}
 	);
+		put(
+				14, 
+				new HashMap<String,String>(){{
+					put("Object","Taj Mahal");
+					put("Turns","1");
+				}}
+			);
+		put(
+				14, 
+				new HashMap<String,String>(){{
+					put("Object","Great Pyramid of Giza");
+					put("Turns","1");
+				}}
+			);
+		put(
+				15, 
+				new HashMap<String,String>(){{
+					put("Object","Collosseum");
+					put("Turns","1");
+				}}
+			);
+		put(
+				16, 
+				new HashMap<String,String>(){{
+					put("Object","Van Gogh");
+					put("Turns","1");
+				}}
+			);
+		put(
+				17, 
+				new HashMap<String,String>(){{
+					put("Object","Painting");
+					put("Turns","1");
+				}}
+			);
+		put(
+				18, 
+				new HashMap<String,String>(){{
+					put("Object","Christ the Redeemer");
+					put("Turns","1");
+				}}
+			);
+		put(
+				19, 
+				new HashMap<String,String>(){{
+					put("Object","Stonehenge");
+					put("Turns","1");
+				}}
+			);
+		put(
+				20, 
+				new HashMap<String,String>(){{
+					put("Object","Waterfall");
+					put("Turns","1");
+				}}
+			);
+		put(
+				21, 
+				new HashMap<String,String>(){{
+					put("Object","Temple of Artemis");
+					put("Turns","1");
+				}}
+			);
+		put(
+				22, 
+				new HashMap<String,String>(){{
+					put("Object","Whale");
+					put("Turns","1");
+				}}
+			);
+		put(
+				23, 
+				new HashMap<String,String>(){{
+					put("Object","Fox");
+					put("Turns","1");
+				}}
+			);
+		put(
+				24, 
+				new HashMap<String,String>(){{
+					put("Object","Dolphin");
+					put("Turns","1");
+				}}
+			);
+		put(
+				25, 
+				new HashMap<String,String>(){{
+					put("Object","Pattern");
+					put("Turns","1");
+				}}
+			);
+		put(
+				26, 
+				new HashMap<String,String>(){{
+					put("Object","Fractal Art");
+					put("Turns","1");
+				}}
+			);
 	}};
 	
 	public static HashMap<Integer, HashMap<String,String>> getAllQuests() {

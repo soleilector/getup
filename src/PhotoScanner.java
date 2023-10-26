@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,6 +14,7 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
@@ -69,8 +71,14 @@ public class PhotoScanner {
 			ByteString imgBytes = ByteString.readFrom(new FileInputStream(detectFilePath));
 			com.google.cloud.vision.v1.Image img = com.google.cloud.vision.v1.Image.newBuilder().setContent(imgBytes)
 					.build();
+			Feature landMarkFeature = Feature.newBuilder().setType(Feature.Type.LANDMARK_DETECTION).build();
+			Feature objectFeature = Feature.newBuilder().setType(Type.OBJECT_LOCALIZATION).build();
+			Feature facesFeature = Feature.newBuilder().setType(Feature.Type.FACE_DETECTION).build();
 			AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
-					.addFeatures(Feature.newBuilder().setType(Type.OBJECT_LOCALIZATION)).setImage(img).build();
+					.addFeatures(objectFeature)
+					.addFeatures(landMarkFeature)
+					.addFeatures(facesFeature)
+					.setImage(img).build();
 			requests.add(request);
 
 			// Initialize client that will be used to send requests. This client only needs
@@ -96,10 +104,68 @@ public class PhotoScanner {
 			ArrayList<String> detectedObjects = new ArrayList<>();
 			for (AnnotateImageResponse res : responses) {
 				for (LocalizedObjectAnnotation entity : res.getLocalizedObjectAnnotationsList()) {
-					detectedObjects.add(entity.getName());
-					//System.out.format("Object name: %s%n", entity.getName());
+					String thisObj = entity.getName();
+					boolean isDupe = false;
+					
+					for (String foundObj : detectedObjects) { if (foundObj.equals(thisObj)) { isDupe = true; } } // ensure there are no duplicates
+					
+					if (!isDupe) {
+						detectedObjects.add(thisObj);
+						System.out.format("+++++++++++===========++++ Found object: %s\n", thisObj);
+					}
+				}
+				
+				for (EntityAnnotation annotation : res.getLandmarkAnnotationsList()) {
+					//System.out.println("EEK");
+					String thisLandmark = annotation.getDescription();
+					boolean isDupe = false;
+					
+					for (String foundLandmark : detectedObjects) { if (foundLandmark.equals(thisLandmark)) { isDupe = true; } } // ensure there are no duplicates
+					
+					if (!isDupe) {
+						detectedObjects.add(thisLandmark);
+						System.out.format("+++++++++++===========++++ Found object: %s\n", thisLandmark);
+					}
+				}
+				
+				for (FaceAnnotation annotation : res.getFaceAnnotationsList()) {
+					boolean isJoy = annotation.getJoyLikelihoodValue() >= 4;
+					boolean isAnger = annotation.getAngerLikelihoodValue() >= 4;
+					boolean isSad = annotation.getSorrowLikelihoodValue() >= 4;
+					boolean isSurprise = annotation.getSurpriseLikelihoodValue() >= 4;
+					
+					HashMap<String, Boolean> emotionValues = new HashMap<>() {{
+						put("Joy", isJoy);
+						put("Anger", isAnger);
+						put("Sorrow", isSad);
+						put("Surprise", isSurprise);
+					}}; 
+					
+					System.out.printf("moods:\n\tJoy Value: %d\n\tAnger Value: %d\n\tSad Value: \n\tSurprise Value: %d\n",
+							annotation.getJoyLikelihoodValue(),
+							annotation.getAngerLikelihoodValue(),
+							annotation.getSorrowLikelihoodValue(),
+							annotation.getSurpriseLikelihoodValue()
+							);
+					
+					for (String emotion : emotionValues.keySet()) {
+						boolean isDupe = false;
+						for (String foundEmotion : detectedObjects) {
+							if (foundEmotion.equals(emotion)) {
+								isDupe = true;
+								break;
+							} 
+						} // ensure there are no duplicates
+						if (!isDupe && emotionValues.get(emotion) == true) {
+							detectedObjects.add(emotion);
+							System.out.format("+++++++++++===========++++ Found emotion: %s\n", emotion);
+						}
+						
+					}
 				}
 			}
+			
+
 			//System.out.println(detectedObjects.size());
 			
 			return detectedObjects;
