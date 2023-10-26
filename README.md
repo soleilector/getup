@@ -11,7 +11,8 @@ An fun A.I. adventure simulator application that takes an RPG-based approach in 
 - [ ] More Biomes
 - [ ] Biome Traversal
 - [ ] Local fauna and flora
-- [ ] Landmark integration
+- [x] Landmark integration
+- [x] Emotion integration
 - [ ] Obscure animals
-- [ ] History and paintings
+- [x] History and paintings
 - [ ] Interaction flavor text
