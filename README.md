@@ -16,3 +16,5 @@ An fun A.I. adventure simulator application that takes an RPG-based approach in 
 - [ ] Obscure animals
 - [x] History and paintings
 - [ ] Interaction flavor text
+
+**Disclaimer:** This app does not store any data, online or otherwise. However, this application uses Google Cloud Vision, which does store the images for a short period of time in order to run its detection algorithms. !(Learn more here)[https://cloud.google.com/vision/docs/data-usage#:~:text=When%20you%20send%20an%20image,return%20the%20results%20to%20you.]
